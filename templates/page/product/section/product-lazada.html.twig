@@ -1,0 +1,42 @@
+{% block product_lazada_meta_row %}
+	<div>
+        <div class="">
+			<label class="block text-gray-700 text-sm font-bold mb-2" for="product_edit_lazada_brand">
+				Brand
+			</label>
+            {% set lazada_brand_name = product.getMetaByKey('lazada_brand_name') %}
+            {% set lazada_brand_ref = product.getMetaByKey('lazada_brand_value') %}
+			<div {{ vue_component('TagInput', { 
+            'form': { id: "product_edit_lazada_brand", name: "product_edit[platforms][lazada][brand]", value: { name: lazada_brand_name, value: lazada_brand_ref }},
+            'settings': {
+                create: false,
+                loadData: true,
+                loadDataURL: absolute_url(path('lazada_brand_search')),
+                loadDataParam: 'search',
+                maxItems: 1,
+                options: [{ name: lazada_brand_name, value: lazada_brand_ref }]
+            }
+            }) }}></div>
+		</div>
+
+        <div class="mb-4">
+			<label class="block text-gray-700 text-sm font-bold mb-2" for="product_edit_lazada_category">
+				Category
+			</label>
+            {% set lazada_cat_name = product.getMetaByKey('lazada_category_name') %}
+            {% set lazada_cat_ref = product.getMetaByKey('lazada_category_value') %}
+            <div {{ vue_component('TagInput', { 
+                'form': { 'id': "product_edit_lazada_category", 'name': "product_edit[platforms][lazada][category]", value: { name: lazada_cat_name, value: lazada_cat_ref } },
+                'settings': {
+                    create: false,
+                    loadData: true,
+                    loadDataURL: absolute_url(path('lazada_category_search')),
+                    loadDataParam: 'search',
+                    maxItems: 1,
+                    options: [{ name: lazada_cat_name, value: lazada_cat_ref }]
+                }
+                }) }}>
+            </div>
+        </div>
+	</div>
+{% endblock %}

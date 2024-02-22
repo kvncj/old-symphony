@@ -1,0 +1,82 @@
+{% extends '@Page/dashboard.html.twig' %}
+
+{% block title %}
+	List Products
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	{{ encore_entry_link_tags('product_list') }}
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('product_list') }}
+{% endblock %}
+
+{% set search = app.request.get('search') %}
+{% set status = app.request.get('status') ?? 'all' %}
+{% set order = app.request.get('order') ?? 'updatedOn' %}
+{% set orderBy = app.request.get('orderBy') ?? 'DESC' %}
+
+{% block body %}
+	<div class="flex justify-between mb-4">
+		<h2 class="flex-initial text-2xl font-normal leading-normal">Products</h2>
+		<a class="flex-initial bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" href="{{ path('product_add') }}">Add Product</a>
+	</div>
+	<div id="prod-list">
+		<div class="flex justify-end space-x-4 mb-4">
+			<input id="prod-list__search" type="text" value="{{ search }}" class="flex-auto shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Search by name/sku..."/>
+			<select id="prod-list__status" class="flex-initial bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="status" aria-label="Filter for product status">
+				<option value="all" {% if status == 'all' %} selected {% endif %}>Filter by status...</option>
+				<option value="active" {% if status == 'active' %} selected {% endif %}>Active</option>
+				<option value="inactive" {% if status == 'inactive' %} selected {% endif %}>Inactive</option>
+			</select>
+			<button id="prod-list__filter" class="flex-initial bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Filter</button>
+		</div>
+
+		<table class="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400" data-controller="table">
+			<thead>
+				<tr>
+					<th scope="col" class="sort-header" data-action="click->table#sort" data-sort="id">#</th>
+					<th scope="col"></th>
+					<th scope="col" class="prod-list--name sort-header" data-action="click->table#sort" data-sort="name">Name</th>
+					<th scope="col" class="sort-header" data-action="click->table#sort" data-sort="sku">SKU</th>
+					<th scope="col">Type</th>
+					<th scope="col">Status</th>
+					<th scope="col" class="sort-header" data-action="click->table#sort" data-sort="price">Price</th>
+					<th scope="col" class="sort-header" data-action="click->table#sort" data-sort="updatedOn">Last Modified</th>
+					<th scope="col"></th>
+				</tr>
+			</thead>
+			<tbody>
+				{% if products is empty %}
+					<tr>
+						<td colspan="9">
+							<div class="my-4 p-4 rounded bg-yellow-200 bg-opacity-50 text-center">No products found. Create a new product or sync with an existing store
+								<a href="">here</a>.
+							</div>
+						</td>
+					</tr>
+				{% else %}
+					{% for product in products %}
+						<tr>
+							<th scope="row">{{ product.id }}</th>
+							<td><img src='{{ product.getPrimaryImage.getURL ?? 'https://storage.googleapis.com/pandorabox_wpbuckets/woocommerce-placeholder.png' }}'></td>
+							<td>{{ product.getName }}</td>
+							<td>{{ product.sku }}</td>
+							<td>{{ product.type|capitalize }}</td>
+							<td>{{ product.status|capitalize }}</td>
+							<td>{{ product.getPriceLabel(region)|raw }}</td>
+							<td>{{ product.getUpdatedAt|date("m/d/Y") }}</td>
+							<td>
+								<a class="btn btn-primary" href="{{ path('product_edit', {'productId':product.id}) }}">Edit</a>
+								<button type="button" class="btn btn-primary btn-prod-remove" data-product-id="{{ product.id }}">Delete</button>
+							</td>
+						</tr>
+
+					{% endfor %}
+				{% endif %}
+			</tbody>
+		</table>
+		<div {{ vue_component('Pagination', { currentPage: pageSettings.current, totalPages: pageSettings.total } ) }}></div>
+	{% endblock %}

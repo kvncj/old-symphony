@@ -1,0 +1,73 @@
+{% extends '@Page/dashboard.html.twig' %}
+
+{% block title %}
+	Stores
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	{{ encore_entry_link_tags('product_list') }}
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('product_list') }}
+{% endblock %}
+
+{% set search = app.request.get('search') %}
+{% set status = app.request.get('status') ?? 'all' %}
+{% set order = app.request.get('order') ?? 'updatedOn' %}
+{% set orderBy = app.request.get('orderBy') ?? 'DESC' %}
+
+{% block body %}
+	<div class="flex justify-between mb-4">
+		<h2 class="flex-initial text-2xl font-normal leading-normal">Stores</h2>
+		<a class="flex-initial bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Add Store</a>
+	</div>
+
+	<div id="store-list">
+		<div class="flex justify-end space-x-4 mb-4">
+			<input id="store-list__search" type="text" value="{{ search }}" class="flex-auto shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Search by name..."/>
+			<select id="store-list__status" class="flex-initial bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="status" aria-label="Filter for store status">
+				<option value="all" {% if status == 'all' %} selected {% endif %}>Filter by status...</option>
+				<option value="active" {% if status == 'active' %} selected {% endif %}>Active</option>
+				<option value="inactive" {% if status == 'inactive' %} selected {% endif %}>Inactive</option>
+			</select>
+			<button id="store-list__filter" class="flex-initial bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Filter</button>
+		</div>
+	</div>
+
+	<table class="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400" data-controller="table">
+		<thead>
+			<tr>
+				<th scope="col" class="sort-header" data-action="click->table#sort" data-sort="id">#</th>
+				<th scope="col" class="prod-list--name sort-header" data-action="click->table#sort" data-sort="name">Name</th>
+				<th scope="col" class="sort-header" data-action="click->table#sort" data-sort="sku">Platform</th>
+				<th scope="col">Status</th>
+				<th scope="col" class="sort-header" data-action="click->table#sort" data-sort="updatedOn">Products Synced</th>
+				<th scope="col" class="sort-header" data-action="click->table#sort" data-sort="updatedOn">Orders Synced</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% if stores is empty %}
+				<tr>
+					<td colspan="9">
+						<div class="my-4 p-4 rounded bg-yellow-200 bg-opacity-50 text-center">No stores found.
+						</div>
+					</td>
+				</tr>
+			{% else %}
+				{% for store in stores %}
+					<tr>
+						<th scope="row">{{ store.id }}</th>
+						<td>{{ store.name }}</td>
+						<td>{{ store.platform }}</td>
+						<td>{{ store.status|capitalize }}</td>
+						<td>{{ store.productSync }}</td>
+						<td>{{ store.orderSync }}</td>
+					</tr>
+				{% endfor %}
+			{% endif %}
+		</tbody>
+	</table>
+	<div {{ vue_component('Pagination', { currentPage: pageSettings.current, totalPages: pageSettings.total } ) }}></div>
+{% endblock %}

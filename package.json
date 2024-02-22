@@ -1,0 +1,39 @@
+{
+    "devDependencies": {
+        "@babel/core": "^7.17.0",
+        "@babel/preset-env": "^7.16.0",
+        "@hotwired/stimulus": "^3.0.0",
+        "@symfony/stimulus-bridge": "^3.2.0",
+        "@symfony/ux-vue": "file:vendor/symfony/ux-vue/assets",
+        "@symfony/webpack-encore": "^4.0.0",
+        "autoprefixer": "^10.4.13",
+        "core-js": "^3.23.0",
+        "postcss": "^8.4.20",
+        "postcss-loader": "^7.0.2",
+        "regenerator-runtime": "^0.13.9",
+        "tailwindcss": "^3.2.4",
+        "ts-loader": "^9.0.0",
+        "vue": "^3.0",
+        "webpack": "^5.74.0",
+        "webpack-cli": "^4.10.0",
+        "webpack-notifier": "^1.15.0"
+    },
+    "license": "UNLICENSED",
+    "private": true,
+    "scripts": {
+        "dev-server": "encore dev-server",
+        "dev": "encore dev",
+        "watch": "encore dev --watch",
+        "build": "encore production --progress"
+    },
+    "dependencies": {
+        "@ckeditor/ckeditor5-build-classic": "^35.4.0",
+        "@ckeditor/ckeditor5-vue": "^4.0.1",
+        "flatpickr": "^4.6.13",
+        "sass": "^1.56.2",
+        "sass-loader": "^13.0.0",
+        "tom-select": "^2.2.2",
+        "vue-loader": "^17.0.0",
+        "vue-tsc": "^1.0.13"
+    }
+}

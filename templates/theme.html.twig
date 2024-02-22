@@ -1,0 +1,18 @@
+{% use 'tailwind_2_layout.html.twig' %}
+
+
+{%- block form_row -%}
+    {{ parent() }}
+{%- endblock form_row -%}
+
+{% block form_label %}
+{{ dump(label_attr) }}
+    {% set label_attr = label_attr|merge({'class': ('block text-gray-700 text-sm font-bold mb-2 '~ label_attr.class|default(''))|trim}) %}
+{{ dump(label_attr) }}
+    {{ parent() }}
+{% endblock %}
+
+{%- block form_widget_simple -%}
+    {% set attr = attr|merge({'class': (' shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' ~ attr.class|default(''))|trim}) %}
+    {{ parent() }}
+{%- endblock form_widget_simple -%}

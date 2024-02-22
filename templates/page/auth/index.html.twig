@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ path|capitalize|replace({'-': ' '}) }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ encore_entry_link_tags('login') }}
+{% endblock %}
+
+{% block javascripts %}
+	{{ encore_entry_script_tags('login') }}
+{% endblock %}
+
+{% block body %}
+	<div class="rounded-t-lg overflow-hidden border-t border-l border-r border-gray-400 px-3 py-10 bg-gray-200 flex justify-center w-6/12 m-auto self-center bg-opacity-75">
+		<input id="active" type="hidden" value="{{ path }}"/>
+		<div class="w-full max-w-xs">
+
+			{% for message in app.flashes('success') %}
+				<div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4" role="alert">
+					<p>{{ message }}</p>
+				</div>
+			{% endfor %}
+
+			{% for message in app.flashes('warning') %}
+				<div class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4" role="alert">
+					<p>{{ message }}</p>
+				</div>
+			{% endfor %}
+
+			{% for message in app.flashes('danger') %}
+				<div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
+					<p>{{ message }}</p>
+				</div>
+			{% endfor %}
+
+
+			{{ include('@Page/auth/form/' ~ path ~ '.html.twig') }}
+			{#{{ include('./security/form/register.html.twig') }}
+									{{ include('./security/form/forgot.html.twig') }}#}
+
+			<p class="text-center text-gray-500 text-xs">
+				&copy;2022 Pandorabox Technology Sdn Bhd. All rights reserved.
+			</p>
+		</div>
+	</div>
+{% endblock %}

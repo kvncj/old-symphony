@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Request>
+	<Product>
+		{% if primary_category is defined %}
+			<PrimaryCategory>{{ primary_category }}</PrimaryCategory>
+		{% endif %}
+		{% if item_id is defined %}
+			<ItemId>{{ item_id }}</ItemId>
+		{% endif %}
+		{% if AssociatedSku is defined %}
+			<AssociatedSku>{{ AssociatedSku }}</AssociatedSku>
+		{% endif %}
+		{% if variation is defined %}
+			<variation>
+				{% for variationData in variation %}
+					<variation{{loop.index}}>
+						{% for name, value in variationData %}
+							{% if name == "options" %}
+								<options>
+									{% for option in value %}
+										<option>{{ option }}</option>
+									{% endfor %}
+								</options>
+							{% else %}
+								<{{name}}>{{ value }}</{{name}}>
+							{% endif %}
+						{% endfor %}
+					</variation{{loop.index}}>
+				{% endfor %}
+			</variation>
+		{% endif %}
+		{% if Images is defined %}
+			<Images>
+				{% for url in Images %}
+					<Image>{{ url }}</Image>
+				{% endfor %}
+			</Images>
+		{% endif %}
+		{% if attributes is defined %}
+			<Attributes>
+				{% for name, value in attributes %}
+					<{{name}}>{{ value }}</{{name}}>
+				{% endfor %}
+			</Attributes>
+		{% endif %}
+		<Skus>
+			{% if skus is empty %}
+				<Sku></Sku>
+			{% else %}
+				{% for sku in skus %}
+					<Sku>
+						{% for name, value in sku %}
+							{% if name == "Images" %}
+								<Images>
+									{% for url in value %}
+										<Image>{{ url }}</Image>
+									{% endfor %}
+								</Images>
+							{% elseif name == "saleProp" %}
+								<saleProp>
+									{% for v_name, v_value in value %}
+										<{{v_name}}>{{ v_value }}</{{v_name}}>
+									{% endfor %}
+								</saleProp>
+							{% elseif value is iterable %}
+								<{{name}}>
+									{% for v_name, v_value in value %}
+										{% if v_value is not iterable %}
+											<{{v_name}}>{{ v_value }}</{{v_name}}>
+										{% endif %}
+									{% endfor %}
+								</{{name}}>
+							{% else %}
+								<{{name}}>{{ value }}</{{name}}>
+							{% endif %}
+						{% endfor %}
+					</Sku>
+				{% endfor %}
+			{% endif %}
+		</Skus>
+	</Product>
+</Request>

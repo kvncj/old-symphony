@@ -1,0 +1,31 @@
+<form id="register-form" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" method="post">
+	<div class="mb-4">
+		<label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+			Email
+		</label>
+		<input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="register-form__email" name="register[email]" value="{{ email ?? null }}" placeholder="Email">
+	</div>
+
+	<div class="mb-4">
+		<label for="register-form__type" class="block text-gray-700 text-sm font-bold mb-2">Type</label>
+		<select id="register-form__type" name="register[type]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+			<option selected value="individual">Individual</option>
+			<option value="company">Company</option>
+		</select>
+	</div>
+
+	<div class="mb-6">
+		<div {{ vue_component('PasswordField', { 'id': "register-form__pwd-first", 'name': "register[password][first]", 'label': 'Password', 'placeholder': 'Password', 'class': "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" } ) }}></div>
+		<div {{ vue_component('PasswordField', { 'id': "register-form__pwd-second", 'name': "register[password][second]", 'label': false, 'placeholder': 'Confirm Password', 'class': "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" } ) }}></div>
+	</div>
+
+	<div class="mb-4 flex items-center justify-between">
+		<input type="hidden" name="register[_csrf_token]" value="{{ csrf_token('register') }}"/>
+		<button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+			Register
+		</button>
+		<a href="{{ absolute_url(path('auth_forgot')) }}" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+			Return to Login
+		</a>
+	</div>
+</form>

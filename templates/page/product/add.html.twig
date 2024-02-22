@@ -1,0 +1,29 @@
+{% extends '@Page/dashboard.html.twig' %}
+
+{% block title %}
+	Add Product
+{% endblock %}
+
+{% block body %}
+	<form id="product-add-form" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" method="post">
+		<div class="mb-4">
+			<label for="register-form__type" class="block text-gray-700 text-sm font-bold mb-2">Team</label>
+			<select id="register-form__type" name="product_add[team]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+				{% for team in teams %}
+					<option value="{{ team.id }}">{{ team.name }}</option>
+				{% endfor %}
+			</select>
+			<p class="text-xs mt-1 text-slate-400">Please select the team to create a product for.</p>
+		</div>
+
+		<div class="mb-4 flex items-center justify-between">
+			<input type="hidden" name="register[_csrf_token]" value="{{ csrf_token(route) }}"/>
+			<button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+				Register
+			</button>
+			<a href="{{ absolute_url(path('auth_forgot')) }}" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+				Return to Login
+			</a>
+		</div>
+	</form>
+{% endblock %}

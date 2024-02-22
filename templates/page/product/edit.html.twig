@@ -1,0 +1,124 @@
+{% extends '@Page/dashboard.html.twig' %}
+
+{% block title %}
+	Edit Product
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	{{ encore_entry_link_tags('product_edit') }}
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('product_edit') }}
+{% endblock %}
+
+{% block body %}
+	<form id="product-edit-form" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" method="post">
+		<div class="mb-4">
+			<label class="block text-gray-700 text-sm font-bold mb-2" for="product-edit-form__name">
+				Name
+			</label>
+			<input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="product-edit-form__name" name="product_edit[name]" value="{{ product.name }}" required>
+		</div>
+
+		<div class="mb-4">
+			<label class="block text-gray-700 text-sm font-bold mb-2" for="product-edit-form__sku">
+				SKU
+			</label>
+			<input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="product-edit-form__sku" name="product_edit[sku]" value="{{ product.sku }}" required>
+		</div>
+
+		<div class="mb-4">
+			<label class="block text-gray-700 text-sm font-bold mb-2" for="product-edit-form__description">
+				Description
+			</label>
+			<div {{ vue_component('CKEditor', { 'form': { 'id': 'product-edit-form__description', 'name' : "product_edit[description]" , 'class': "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" } , 'data' : product.description ?? '' , 'url' : path('image_upload') } )}}></div>
+		</div>
+
+		<div class="mb-4">
+			<label class="block text-gray-700 text-sm font-bold mb-2" for="product-edit-form__gallery">
+				Gallery
+			</label>
+			<div {{ vue_component('ImageGallery', { 'form': { 'id': "product-edit-form__gallery", 'name': "product_edit[gallery]", 'multiple': true } , 'images' : product.getgallerydata })}}></div>
+		</div>
+
+		<section id="product-edit-form__general" class="mb-4 border">
+			<div class="flex px-4 py-2 border-b">
+				<label class="block text-gray-700 text-sm flex-initial font-bold my-auto mr-2">Product Type —
+				</label>
+				<div>
+					<select id="product-edit-form__type" name="product_edit[type]" class="h-full rounded-md border-transparent bg-transparent py-0 pl-2 pr-1 text-gray-700 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+						<option value="simple" {% if product.type == 'simple' %} selected {% endif %}>Simple</option>
+						<option value="variable" {% if product.type == 'variable' %} selected {% endif %}>Variable</option>
+					</select>
+				</div>
+			</div>
+
+			<div id="product-edit-form__general--simple" class="p-4{% if product.type != 'simple'%} hidden{% endif %}">
+				<div class="flex space-x-2">
+					<div {{ vue_component('PriceInput', { 'form': { 'name': "product_edit[price]" } , 'data' : product.pricing })}}></div>
+
+					<div class="mb-4">
+						<label class="block text-gray-700 text-sm font-bold mb-2" for="product-edit-form__stock">
+							Stock
+						</label>
+						<input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="product-edit-form__stock" name="product_edit[stock]" value="{{ product.stock }}" type="number">
+					</div>
+				</div>
+				<div class="flex space-x-2">
+					<div {{ vue_component('DimensionInput', { 'form': { 'id': "product_edit_dimensions", 'name': "product_edit[dimensions]" } , 'data' : product.dimensions })}}></div>
+				</div>
+			</div>
+
+			<div id="product-edit-form__general--variable" class="p-4{% if product.type != 'variable'%} hidden{% endif %}">
+				<div {{ vue_component('VariantController', { 'form': { 'id': "product_edit", 'name': "product_edit" } , 'options' : product.options, 'variants' : product.getvariantdata }) }}></div>
+			</div>
+		</section>
+
+		<section id="product-edit-form__platform" class="mb-4 border">
+			<div class="flex px-4 py-2 border-b">
+				<label class="block text-gray-700 text-sm flex-initial font-bold my-auto mr-2">Platforms</label>
+			</div>
+
+
+			{% if platforms is not empty %}
+				{% set contents = [] %}
+				{% for platform in platforms %}
+					{% set contents = contents|merge({
+						(loop.index0): include('@Page/product/section/product-' ~ platform ~ '.html.twig')
+					}) %}
+				{% endfor %}
+				<div {{ vue_component('SideNav', { 'labels': platforms, 'contents': contents } ) }}></div>
+				{#<div class="flex">
+									<nav class="navbar bg-light">
+										<ul class="">
+											{% for platform in platforms %}
+												<li class="">
+													<a class="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pl-2 pr-6" href="{{ app.request.pathinfo }}?platform={{platform}}" role="button" data-platform="{{ platform }}">
+														<span class="ms-1 d-none d-sm-inline"></span>
+														{{ platform|capitalize }}
+													</a>
+												</li>
+											{% endfor %}
+										</ul>
+									</nav>
+									<div class="container mb-3 g-2">
+										{% for platform in platforms %}
+											{{ include('@Page/product/section/product-' ~ platform ~ '.html.twig') }}
+										{% endfor %}
+									</div>
+								</div>#}
+			{% else %}
+				<div class="alert alert-warning">No platforms found</div>
+			{% endif %}
+		</section>
+
+		<div class="mb-4 flex items-center justify-between">
+			<input type="hidden" name="product_edit[_csrf_token]" value="{{ csrf_token(route) }}"/>
+			<button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+				Register
+			</button>
+		</div>
+	</form>
+{% endblock %}

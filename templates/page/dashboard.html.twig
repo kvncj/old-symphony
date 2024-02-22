@@ -1,0 +1,71 @@
+{% set route = app.request.attributes.get('_route') %}
+{% set back = route not in ['home', 'privacy', 'terms'] %}
+{% set route = app.request.attributes.get('_route') %}
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			{% block title %}Welcome!
+			{% endblock %}
+		</title>
+		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+		{% block stylesheets %}
+			{{ encore_entry_link_tags('app') }}
+		{% endblock %}
+		{% block javascripts %}
+			{{ encore_entry_script_tags('app') }}
+		{% endblock %}
+	</head>
+	<body class="bg-white font-sans">
+		{#<header>
+									<nav class="navbar fixed-top navbar-expand-lg bg-white">
+										<div class="container-fluid">
+											<a class="navbar-brand" href="{{ path('home') }}">
+												<img src="https://storage.googleapis.com/pandorabox_wpbuckets/bargus/bargus_logo.png" alt="" width="25" height="25" class="d-inline-block align-text-top">
+											</a>
+											<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+												<span class="navbar-toggler-icon"></span>
+											</button>
+											<div class="collapse navbar-collapse" id="navbarNav">
+												<ul class="navbar-nav ms-auto">
+													{% if app.user is defined and app.user is not null %}
+														<li class="nav-item dropdown">
+															<a class="nav-link dropdown-toggle" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ app.user.userIdentifier }}
+															</a>
+															<div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+																<a class="dropdown-item" href="javascript:void(0);">Account
+																</a>
+																<a class="dropdown-item" href="javascript:void(0);">Settings
+																</a>
+																<div class="dropdown-divider"></div>
+																<a class="dropdown-item" href="{{ path('logout') }}">Logout
+																</a>
+															</div>
+														</li>
+													{% endif %}
+												</ul>
+											</div>
+										</div>
+									</nav>
+								</header>#}
+		<div class="d-flex h-100">
+			{% if (route starts with 'security') == false %}
+				{% include('@Page/menu.html.twig') %}
+			{% endif %}
+			<div class="ml-[200px]">
+
+				{% for label, messages in app.flashes %}
+					{% for message in messages %}
+						<div class="alert alert-{{ label }}">
+							{{ message }}
+						</div>
+					{% endfor %}
+				{% endfor %}
+				<div class="p-3"> {% block body %}{% endblock %}
+					</div>
+				</div>
+			</div>
+		</body>
+	</html>

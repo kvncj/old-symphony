@@ -1,0 +1,6 @@
+{% extends '@Page/dashboard.html.twig' %}
+
+
+{% block body %}
+<div {{ vue_component('BatchRequest', { 'url': url, 'param': param, 'calls': calls } ) }}></div>
+{% endblock %}
